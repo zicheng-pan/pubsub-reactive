@@ -1,0 +1,1 @@
+在AppTest测试类中testPublisher方法中采用reactive stream api的编程方式完成
