@@ -20,10 +20,11 @@ public class AppTest {
     }
 
     @Test
-    public void testPublisher() {
+    public void testPublisher1() {
         DefaultPublisher publisher = new DefaultPublisher();
         Mono from = Mono.from(publisher);
         for (int i = 0; i < 5; i++) {
+            // 方案一
             //可以看出每次执行 一次publish方法之后，
             // subscribe中的是代理了自己的subscriber对象类为 reactor.core.publisher.MonoNext
             // Mono代理的subscriber会先执行subscription中的cancle方法，然后执行自己真正的subscriber对象中的onNext方法
@@ -44,6 +45,22 @@ public class AppTest {
 
 
             from.subscribe(new BusinessSubscriber());
+
+
+            publisher.publish(i);
+        }
+
+    }
+
+    @Test
+    public void testPublisher2() {
+        DefaultPublisher publisher = new DefaultPublisher();
+        // 方案二：看注释得
+        // * Convert a {@link Publisher} to a {@link Mono} without any cardinality check
+        //	 * (ie this method doesn't cancel the source past the first element).
+        Mono from = Mono.fromDirect(publisher);
+        from.subscribe(new BusinessSubscriber());
+        for (int i = 0; i < 5; i++) {
             publisher.publish(i);
         }
 
