@@ -15,5 +15,7 @@ public class TestDistributeMessageEvent {
         DistrubuteEventPubliser publiser = new DistrubuteEventPubliser(zkClient, path);
         publiser.subscribe(new DistributeEventSubstriber(zkClient, path));
         publiser.publish(new DistributedEvent("data11111"));
+        publiser.publish(new DistributedEvent("data2222"));
+        publiser.publish(new DistributedEvent("data3333"));
     }
 }
