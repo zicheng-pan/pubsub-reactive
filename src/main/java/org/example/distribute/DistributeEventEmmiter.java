@@ -14,7 +14,11 @@ public class DistributeEventEmmiter implements Subscriber<EventObject> {
 
     public DistributeEventEmmiter(ZkClient zkClient, String path) {
         this.zkClient = zkClient;
-        this.zkClient.createEphemeral(path);
+        try {
+            this.zkClient.createEphemeral(path);
+        }catch (Exception e){
+            // exist ignore
+        }
         this.path = path;
     }
 
@@ -29,7 +33,7 @@ public class DistributeEventEmmiter implements Subscriber<EventObject> {
         if (o instanceof DistributedEvent) {
             DistributedEvent event = (DistributedEvent) o;
             if (event.isDistributed()) {
-                zkClient.writeData(this.path, o);
+                zkClient.writeData(this.path, event.getSource());
             }
         }
     }

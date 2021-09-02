@@ -9,13 +9,22 @@ import org.junit.Test;
 public class TestDistributeMessageEvent {
 
     @Test
-    public void testPubSub() {
+    public void testPubSub() throws InterruptedException {
         ZkClient zkClient = new ZkClient("localhost:2181");
-        String path = "/tempNode01";
-        DistrubuteEventPubliser publiser = new DistrubuteEventPubliser(zkClient, path);
-        publiser.subscribe(new DistributeEventSubstriber(zkClient, path));
+        String serviceName = "/tempNode01";
+        DistrubuteEventPubliser publiser = new DistrubuteEventPubliser(zkClient, serviceName);
+//        publiser.subscribe(new DistributeEventSubstriber(zkClient, serviceName));
+        new DistributeEventSubstriber(zkClient, serviceName);
         publiser.publish(new DistributedEvent("data11111"));
-        publiser.publish(new DistributedEvent("data2222"));
-        publiser.publish(new DistributedEvent("data3333"));
+        // set timeout till notifier got message event
+        Thread.sleep(1000);
+        publiser.publish(new DistributedEvent("data22222"));
+        Thread.sleep(1000);
+        publiser.publish(new DistributedEvent("data33333"));
+        Thread.sleep(1000);
+
+
+        // block thread here to wait notify event
+        for (; ; ) ;
     }
 }

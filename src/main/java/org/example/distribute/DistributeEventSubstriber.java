@@ -17,12 +17,12 @@ public class DistributeEventSubstriber implements Subscriber<EventObject> {
 
             @Override
             public void handleDataChange(String s, Object o) throws Exception {
-
+                onNext(o);
             }
 
             @Override
             public void handleDataDeleted(String s) throws Exception {
-                onNext(s);
+
             }
         });
     }
